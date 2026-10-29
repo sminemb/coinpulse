@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CoinTrack",
+  title: "CoinPulse",
   description:
     "Crypto Screener App with a built-in High-Frequency Terminal & Dashboard",
 };
@@ -22,8 +22,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
+      <header />
+
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
