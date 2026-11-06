@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
-import { Time } from "lightweight-charts";
+import type { CandlestickData, UTCTimestamp } from "lightweight-charts";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -69,18 +69,24 @@ export function timeAgo(date: string | number | Date): string {
   return past.toISOString().split("T")[0];
 }
 
-export function convertOHLCData(data: OHLCData[]) {
-  return data
-    .map((d) => ({
-      time: d[0] as Time, // ensure seconds, not ms
-      open: d[1],
-      high: d[2],
-      low: d[3],
-      close: d[4],
-    }))
-    .filter(
-      (item, index, arr) => index === 0 || item.time !== arr[index - 1].time,
-    );
+export function convertOHLCData(
+  data: OHLCData[],
+): CandlestickData<UTCTimestamp>[] {
+  const candlesByTime = new Map<number, CandlestickData<UTCTimestamp>>();
+
+  for (const [timestamp, open, high, low, close] of data) {
+    if (
+      ![timestamp, open, high, low, close].every(Number.isFinite) ||
+      timestamp <= 0
+    ) {
+      continue;
+    }
+
+    const time = Math.floor(timestamp / 1000) as UTCTimestamp;
+    candlesByTime.set(time, { time, open, high, low, close });
+  }
+
+  return [...candlesByTime.values()].sort((a, b) => a.time - b.time);
 }
 
 export const ELLIPSIS = "ellipsis" as const;

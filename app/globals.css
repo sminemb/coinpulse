@@ -361,6 +361,8 @@
 
   .coin-overview {
     @apply min-h-92 px-5 py-4;
+    display: flex;
+    flex-direction: column;
   }
 
   .trending-card {
@@ -384,7 +386,11 @@
   }
 
   .overview-toolbar {
-    @apply mt-5 flex flex-wrap items-center justify-between gap-4;
+    @apply flex flex-wrap items-center justify-between gap-4;
+  }
+
+  .chart-content {
+    @apply flex min-h-0 flex-1 flex-col;
   }
 
   .overview-coin {
@@ -407,70 +413,36 @@
     @apply flex items-center gap-2 text-xs text-purple-100;
   }
 
-  .period-switch > span:not(.skeleton-block) {
+  .period-switch > button {
     @apply rounded-md bg-dark-400 px-3 py-2;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
   }
 
-  .period-switch > .selected {
+  .period-switch > button:hover {
+    @apply text-white;
+  }
+
+  .period-switch > button:focus-visible {
+    @apply outline-2 outline-offset-2 outline-green-500;
+  }
+
+  .period-switch > button.selected {
     @apply bg-green-500! text-gray-950;
   }
 
-  .chart-plot {
-    @apply relative mt-6 h-44 pl-11;
-    background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(25% - 1px), #26313d calc(25% - 1px), #26313d 25%);
+  .chart-area {
+    @apply relative mt-4 min-h-64 flex-1;
   }
 
-  .chart-y-labels {
-    @apply absolute inset-y-0 left-0 flex flex-col justify-between text-[9px] text-purple-100;
+  .chart-container {
+    @apply h-full min-h-64 w-full;
   }
 
-  .chart-candles {
-    @apply relative flex h-full items-center justify-between gap-1;
-  }
-
-  .candle {
-    @apply relative flex h-full flex-1 items-center justify-center;
-  }
-
-  .candle::before {
-    content: "";
-    height: var(--wick-height);
-    transform: translateY(var(--candle-offset));
-    @apply absolute w-px;
-  }
-
-  .candle i {
-    height: var(--candle-height);
-    min-height: 8px;
-    transform: translateY(var(--candle-offset));
-    @apply relative z-10 w-1.5 rounded-[1px];
-  }
-
-  .candle-up::before,
-  .candle-up i {
-    @apply bg-green-300;
-  }
-
-  .candle-down::before,
-  .candle-down i {
-    @apply bg-red-500;
-  }
-
-  .chart-current-price {
-    @apply absolute right-0 top-1/2 max-w-16 truncate rounded-full bg-green-500 px-2 py-1 text-[9px] font-semibold text-gray-950;
-    transform: translateY(-50%);
-  }
-
-  .chart-x-labels {
-    @apply absolute -bottom-5 left-0 flex w-full justify-between text-[9px] text-purple-100;
-  }
-
-  .chart-volume {
-    @apply mt-7 flex h-7 items-end justify-between gap-1 pl-11;
-  }
-
-  .chart-volume span {
-    @apply flex-1 bg-dark-400;
+  .chart-status {
+    @apply pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md bg-dark-700/90 px-3 py-2 text-center text-xs text-purple-100;
   }
 
   .trending-card > .market-card-title {

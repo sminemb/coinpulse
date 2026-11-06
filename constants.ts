@@ -20,7 +20,7 @@ export const navItems = [
   },
 ];
 
-const CHART_COLORS = {
+export const CHART_COLORS = {
   background: "#0b1116",
   text: "#8f9fb1",
   grid: "#1a2332",
@@ -91,20 +91,19 @@ export const getChartConfig = (
   },
 });
 
-export const PERIOD_CONFIG: Record<
-  Period,
-  { days: number | string; interval?: "hourly" | "daily" }
-> = {
-  daily: { days: 1, interval: "hourly" },
-  weekly: { days: 7, interval: "hourly" },
-  monthly: { days: 30, interval: "hourly" },
-  "3months": { days: 90, interval: "daily" },
-  "6months": { days: 180, interval: "daily" },
+export const PERIOD_CONFIG = {
+  daily: { days: 1 },
+  weekly: { days: 7 },
+  monthly: { days: 30 },
+  "3months": { days: 90 },
+  "6months": { days: 180 },
   yearly: { days: 365 },
   max: { days: "max" },
-};
+} as const;
 
-export const PERIOD_BUTTONS: { value: Period; label: string }[] = [
+export type ChartPeriod = keyof typeof PERIOD_CONFIG;
+
+export const PERIOD_BUTTONS: { value: ChartPeriod; label: string }[] = [
   { value: "daily", label: "1D" },
   { value: "weekly", label: "1W" },
   { value: "monthly", label: "1M" },
