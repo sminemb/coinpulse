@@ -11,11 +11,34 @@ export async function GET(request: Request) {
   const { days } = PERIOD_CONFIG[period as ChartPeriod];
 
   try {
-    const data = await fetcher<OHLCData[]>(
-      `/coins/bitcoin/ohlc?vs_currency=usd&days=${days}`,
-    );
+    let data: OHLCData[];
+
+    try {
+      data = await fetcher<OHLCData[]>(
+        `/coins/bitcoin/ohlc?vs_currency=usd&days=${days}`,
+      );
+    } catch (error) {
+      if (period !== "max") throw error;
+
+      // Some CoinGecko plans reject `days=max`; 365 days is the longest
+      // standard range supported across plans and keeps Max usable there.
+      data = await fetcher<OHLCData[]>(
+        "/coins/bitcoin/ohlc?vs_currency=usd&days=365",
+      );
+    }
+
+    if (period === "max" && data.length === 0) {
+      data = await fetcher<OHLCData[]>(
+        "/coins/bitcoin/ohlc?vs_currency=usd&days=365",
+      );
+    }
+
     return Response.json(data, { headers: { "Cache-Control": "no-store" } });
-  } catch {
+  } catch (error) {
+    console.error("CoinGecko OHLC request failed", {
+      period,
+      message: error instanceof Error ? error.message : "Unknown error",
+    });
     return Response.json(
       { error: "Market data is temporarily unavailable." },
       { status: 502 },

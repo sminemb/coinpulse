@@ -5,10 +5,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CandlestickSeries,
   createChart,
+  LineStyle,
   type IChartApi,
   type ISeriesApi,
 } from "lightweight-charts";
 import {
+  CHART_COLORS,
   getCandlestickConfig,
   getChartConfig,
   PERIOD_BUTTONS,
@@ -22,6 +24,7 @@ interface CandlestickChartProps {
     name: string;
     symbol: string;
     currentPrice: string;
+    currentPriceValue: number;
   };
 }
 
@@ -31,6 +34,7 @@ export default function CandlestickChart({ coin }: CandlestickChartProps) {
   const seriesRef = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const [activePeriod, setActivePeriod] = useState<ChartPeriod>("daily");
+  const [requestPeriod, setRequestPeriod] = useState<ChartPeriod | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +47,11 @@ export default function CandlestickChart({ coin }: CandlestickChartProps) {
       ...getChartConfig(height),
       width: container.clientWidth,
     });
-    const series = chart.addSeries(CandlestickSeries, getCandlestickConfig());
+    const series = chart.addSeries(CandlestickSeries, {
+      ...getCandlestickConfig(),
+      lastValueVisible: false,
+      priceLineVisible: false,
+    });
     chartRef.current = chart;
     seriesRef.current = series;
 
@@ -62,11 +70,28 @@ export default function CandlestickChart({ coin }: CandlestickChartProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const series = seriesRef.current;
+    if (!series || !Number.isFinite(coin.currentPriceValue)) return;
+
+    const priceLine = series.createPriceLine({
+      price: coin.currentPriceValue,
+      color: CHART_COLORS.candleUp,
+      lineWidth: 1,
+      lineStyle: LineStyle.Dotted,
+      axisLabelVisible: true,
+    });
+    return () => {
+      if (seriesRef.current === series) series.removePriceLine(priceLine);
+    };
+  }, [coin.currentPriceValue]);
+
   const loadPeriod = useCallback(async (period: ChartPeriod) => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
     setLoading(true);
+    setRequestPeriod(period);
     setError(null);
 
     try {
@@ -123,6 +148,7 @@ export default function CandlestickChart({ coin }: CandlestickChartProps) {
           {PERIOD_BUTTONS.map(({ value, label }) => (
             <button
               aria-pressed={activePeriod === value}
+              aria-busy={loading && requestPeriod === value}
               className={activePeriod === value ? "selected" : ""}
               key={value}
               onClick={() => void loadPeriod(value)}

@@ -36,6 +36,7 @@ export default async function CoinOverview() {
             name: bitcoin.name,
             symbol: bitcoin.symbol.toUpperCase(),
             currentPrice: formatCurrency(bitcoin.current_price),
+            currentPriceValue: bitcoin.current_price,
           }}
         />
       </section>
