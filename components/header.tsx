@@ -25,7 +25,7 @@ export default function Header() {
             Home
           </Link>
 
-          <p>Search Modal</p>
+          <p>Search</p>
 
           <Link
             href="/coins"
