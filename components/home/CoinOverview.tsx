@@ -64,7 +64,7 @@ export default async function CoinOverview() {
             <Image src={bitcoin.image} alt="" width={44} height={44} unoptimized />
             <div><p className="overview-symbol">{bitcoin.name} / {bitcoin.symbol.toUpperCase()}</p><p className="overview-price">{formatCurrency(bitcoin.current_price)}</p></div>
           </div>
-          <div className="period-switch" aria-label="Chart timeframe"><span className="selected">1h</span><span>3h</span><span>1d</span><span>1w</span><span>1m</span></div>
+          <div className="period-switch" aria-label="Chart timeframe"><span>1h</span><span>3h</span><span className="selected">1d</span><span>1w</span><span>1m</span></div>
         </div>
         <div className="chart-plot" role="img" aria-label="Bitcoin price chart">
           <div className="chart-y-labels" aria-hidden="true">{axisLabels.map((label, index) => <span key={`${label}-${index}`}>{label}</span>)}</div>

@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -22,23 +21,32 @@ const datatable = <T,>({
   bodyCellClassName,
 }: DataTableProps<T>) => {
   return (
-    <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+    <Table className={tableClassName}>
+      <TableHeader className={headerClassName}>
+        <TableRow className={headerRowClassName}>
+          {columns.map((column, index) => (
+            <TableHead
+              key={index}
+              className={[headerCellClassName, column.headClassName].filter(Boolean).join(" ")}
+            >
+              {column.header}
+            </TableHead>
+          ))}
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">INV001</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>Credit Card</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
-        </TableRow>
+        {data.map((row, rowIndex) => (
+          <TableRow key={rowKey(row, rowIndex)} className={bodyRowClassName}>
+            {columns.map((column, columnIndex) => (
+              <TableCell
+                key={columnIndex}
+                className={[bodyCellClassName, column.cellClassName].filter(Boolean).join(" ")}
+              >
+                {column.cell(row, rowIndex)}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

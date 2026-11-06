@@ -15,12 +15,12 @@ async function getTopMovers(): Promise<TrendingCoin[]> {
 
 function TopMoversError() {
   return (
-    <section className="market-card trending-card" aria-labelledby="top-movers-title">
-      <h2 id="top-movers-title" className="market-card-title">
-        Top Movers
+    <section className="market-card trending-card" aria-labelledby="trending-title">
+      <h2 id="trending-title" className="market-card-title">
+        Trending
       </h2>
       <p className="market-error" role="status">
-        Top movers are temporarily unavailable. Please try again shortly.
+        Trending coins are temporarily unavailable. Please try again shortly.
       </p>
     </section>
   );
@@ -32,9 +32,9 @@ export default async function TopMovers() {
     if (items.length === 0) return <TopMoversError />;
 
     return (
-      <section className="market-card trending-card" aria-labelledby="top-movers-title">
-        <h2 id="top-movers-title" className="market-card-title">
-          Top Movers
+      <section className="market-card trending-card" aria-labelledby="trending-title">
+        <h2 id="trending-title" className="market-card-title">
+          Trending
         </h2>
         <ul className="trending-list">
           {items.map((item) => {
